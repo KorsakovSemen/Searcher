@@ -1,5 +1,6 @@
 #include "search_server.h"
 #include "iterator_range.h"
+#include "profile.h"
 
 #include <algorithm>
 #include <iterator>
@@ -7,15 +8,18 @@
 #include <iostream>
 
 vector<string> SplitIntoWords(const string& line) {
+  LOG_DURATION("SplitIntoWords");
   istringstream words_input(line);
   return {istream_iterator<string>(words_input), istream_iterator<string>()};
 }
 
 SearchServer::SearchServer(istream& document_input) {
+    LOG_DURATION("CONSTRUCTOR");
   UpdateDocumentBase(document_input);
 }
 
 void SearchServer::UpdateDocumentBase(istream& document_input) {
+    LOG_DURATION("UPDATE BASE");
   InvertedIndex new_index;
 
   for (string current_document; getline(document_input, current_document); ) {
@@ -28,6 +32,7 @@ void SearchServer::UpdateDocumentBase(istream& document_input) {
 void SearchServer::AddQueriesStream(
   istream& query_input, ostream& search_results_output
 ) {
+    LOG_DURATION("ADDQUERIES");
   for (string current_query; getline(query_input, current_query); ) {
     const auto words = SplitIntoWords(current_query);
 
@@ -64,6 +69,7 @@ void SearchServer::AddQueriesStream(
 }
 
 void InvertedIndex::Add(const string& document) {
+    LOG_DURATION("ADD");
   docs.push_back(document);
 
   const size_t docid = docs.size() - 1;
@@ -73,6 +79,7 @@ void InvertedIndex::Add(const string& document) {
 }
 
 list<size_t> InvertedIndex::Lookup(const string& word) const {
+    LOG_DURATION("LOOKUP");
   if (auto it = index.find(word); it != index.end()) {
     return it->second;
   } else {

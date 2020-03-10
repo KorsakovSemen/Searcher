@@ -7,6 +7,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <mutex>
 using namespace std;
 
 class InvertedIndex {
@@ -32,4 +33,5 @@ public:
 
 private:
   InvertedIndex index;
+  mutex mutex;
 };

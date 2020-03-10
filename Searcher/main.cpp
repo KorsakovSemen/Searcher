@@ -199,9 +199,14 @@ void TestBasicSearch() {
   };
   TestFunctionality(docs, queries, expected);
 }
-
+void TestSearchServer(istream& document_input, istream& query_input,
+    ostream& search_results_output) {
+    SearchServer srv(document_input);
+    srv.AddQueriesStream(query_input, search_results_output);
+}
 int main() {
   TestRunner tr;
+ //RUN_TEST(tr, TestSearchServer);
   RUN_TEST(tr, TestSerpFormat);
   RUN_TEST(tr, TestTop5);
   RUN_TEST(tr, TestHitcount);
